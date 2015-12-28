@@ -21,6 +21,13 @@ public class MessageConstants {
   
   // Operation names: Also need to be updated in corresponding handlers
   public static final String MSG_OP_LKUP_ACCESS_HAZARDS = "access.hazards";
+  public static final String MSG_OP_LKUP_EDU_USE = "educational.use";
+  public static final String MSG_OP_LKUP_READ_LEVEL = "reading.level";
+  public static final String MSG_OP_LKUP_AD_STATUS = "ad.status";
+  public static final String MSG_OP_LKUP_MEDIA_FEATURES = "media.features";
+  public static final String MSG_OP_LKUP_GRADE = "grades";
+  public static final String MSG_OP_21_CEN_SKILLS = "21.cen.skills";
+
 
 
   // Containers for different responses
