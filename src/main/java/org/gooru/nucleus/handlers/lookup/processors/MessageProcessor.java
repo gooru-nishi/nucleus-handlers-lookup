@@ -66,12 +66,12 @@ class MessageProcessor implements Processor {
       }
       return new ResponseTransformerBuilder().build(result).transform();
     } catch (InvalidRequestException e) {
-      // TODO: handle exception
+      LOGGER.warn("Caught Invalid Request exception while processing", e);
+      return new ResponseTransformerBuilder().build(e).transform();
     } catch (InvalidUserException e) {
-      // TODO: handle exception
+      LOGGER.warn("Caught Invalid User while processing", e);
+      return new ResponseTransformerBuilder().build(e).transform();
     }
-
-    return null;
   }
 
   private JsonObject processReadingLevels() {

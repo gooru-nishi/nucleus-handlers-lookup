@@ -1,13 +1,10 @@
 package org.gooru.nucleus.handlers.lookup.processors.responses.transformers;
 
-import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
+import org.gooru.nucleus.handlers.lookup.constants.HttpConstants;
 import org.gooru.nucleus.handlers.lookup.constants.MessageConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 
 class MessageBusResponseTransformer implements ResponseTransformer {
 
@@ -15,9 +12,6 @@ class MessageBusResponseTransformer implements ResponseTransformer {
   private JsonObject inputToTransform;
   private JsonObject transformedOutput;
   private boolean transformed = false;
-  private Map<String, String> headers;
-  private int httpStatus;
-  private JsonObject httpBody;
 
   public MessageBusResponseTransformer(JsonObject inputToTransform) {
     this.inputToTransform = inputToTransform;
@@ -26,26 +20,49 @@ class MessageBusResponseTransformer implements ResponseTransformer {
       throw new IllegalArgumentException("Invalid or null JsonObject for initialization");
     }
   }
-  
+
   @Override
   public JsonObject transform() {
-    if (!this.transformed) {
-      processTransformation();
-      this.transformed = true;
-    }
+    processTransformation();
     return this.transformedOutput;
   }
 
   private void processTransformation() {
-    // TODO: Provide implementation
-
-    transformedOutput = new JsonObject();
-
-    // Now that we are done, mark it as transformed
-    this.transformed = true;
+    if (!this.transformed) {
+      transformedOutput = new JsonObject();
+      transformedOutput.put(MessageConstants.MSG_OP_STATUS, MessageConstants.MSG_OP_STATUS_SUCCESS);
+      transformedOutput.put(MessageConstants.RESP_CONTAINER_MBUS, getTransformedResponse());
+      this.transformed = true;
+    }
   }
 
+  private JsonObject getTransformedResponse() {
+    JsonObject transformedResponse = new JsonObject();
+    transformedResponse.put(MessageConstants.MSG_HTTP_STATUS, HttpConstants.HttpStatus.SUCCESS.getCode());
+    JsonObject headers = getHttpHeaders();
+    if (headers != null) {
+      transformedResponse.put(MessageConstants.MSG_HTTP_HEADERS, headers);
+    } else {
+      transformedResponse.put(MessageConstants.MSG_HTTP_HEADERS, new JsonObject());
+    }
+    JsonObject body = getHttpBody();
+    transformedResponse.put(MessageConstants.MSG_HTTP_BODY, body);
+    return null;
+  }
 
+  private JsonObject getHttpHeaders() {
+    // TODO: Do we want to send out any caching headers as well?
+    // We never return null from this method
+    return new JsonObject().put(HttpConstants.HEADER_CONTENT_TYPE, HttpConstants.CONTENT_TYPE_JSON);
+  }
 
+  private JsonObject getHttpBody() {
+    // We never return null from this method
+    if (inputToTransform != null ) {
+      return new JsonObject().put(MessageConstants.MSG_HTTP_RESPONSE, inputToTransform);
+    } else {
+      return new JsonObject().put(MessageConstants.MSG_HTTP_RESPONSE, new JsonObject());
+    }
+  }
 
 }
