@@ -5,6 +5,7 @@ import io.vertx.core.json.JsonObject;
 import org.gooru.nucleus.handlers.lookup.constants.MessageConstants;
 import org.gooru.nucleus.handlers.lookup.processors.exceptions.InvalidRequestException;
 import org.gooru.nucleus.handlers.lookup.processors.exceptions.InvalidUserException;
+import org.gooru.nucleus.handlers.lookup.processors.responses.transformers.ResponseTransformerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +64,7 @@ class MessageProcessor implements Processor {
         LOGGER.error("Invalid operation type passed in, not able to handle");
         throw new InvalidRequestException();
       }
-      return result;
+      return new ResponseTransformerBuilder().build(result).transform();
     } catch (InvalidRequestException e) {
       // TODO: handle exception
     } catch (InvalidUserException e) {

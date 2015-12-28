@@ -1,12 +1,15 @@
 package org.gooru.nucleus.handlers.lookup.processors;
 
 import io.vertx.core.json.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by ashish on 28/12/15.
  */
 public class ProcessorCache {
   private static final ProcessorCache INSTANCE = new ProcessorCache();
+  private static final Logger LOGGER = LoggerFactory.getLogger(ProcessorCache.class);
 
   private CacheHolder readingLevels;
   private CacheHolder mediaFeatures;
@@ -22,6 +25,7 @@ public class ProcessorCache {
 
   public void setReadingLevels(JsonObject readingLevels) {
     if (readingLevels != null) {
+      LOGGER.debug("Trying to initialize reading levels");
       this.readingLevels.initialize(readingLevels);
     }
   }
@@ -32,6 +36,7 @@ public class ProcessorCache {
 
   public void setMediaFeatures(JsonObject mediaFeatures) {
     if (mediaFeatures != null) {
+      LOGGER.debug("Trying to initialize media features");
       this.mediaFeatures.initialize(mediaFeatures);
     }
   }
@@ -42,6 +47,7 @@ public class ProcessorCache {
 
   public void setGrades(JsonObject grades) {
     if (this.grades != null) {
+      LOGGER.debug("Trying to initialize grades");
       this.grades.initialize(grades);
     }
   }
@@ -52,6 +58,7 @@ public class ProcessorCache {
 
   public void setEducationalUse(JsonObject educationalUse) {
     if (educationalUse != null) {
+      LOGGER.debug("Trying to initialize educational use");
       this.educationalUse.initialize(educationalUse);
     }
   }
@@ -62,6 +69,7 @@ public class ProcessorCache {
 
   public void setAdStatus(JsonObject adStatus) {
     if (adStatus != null) {
+      LOGGER.debug("Trying to initialize ad status");
       this.adStatus.initialize(adStatus);
     }
   }
@@ -72,6 +80,7 @@ public class ProcessorCache {
 
   public void setCenSkills(JsonObject cenSkills) {
     if (cenSkills != null) {
+      LOGGER.debug("Trying to initialize 21st century skills");
       this.cenSkills.initialize(cenSkills);
     }
   }
@@ -82,6 +91,7 @@ public class ProcessorCache {
 
   public void setAccessHazards(JsonObject accessHazards) {
     if (accessHazards != null) {
+      LOGGER.debug("Trying to initialize access hazards");
       this.accessHazards.initialize(accessHazards);
     }
   }
@@ -97,6 +107,7 @@ public class ProcessorCache {
     this.educationalUse = new CacheHolder();
     this.adStatus = new CacheHolder();
     this.cenSkills = new CacheHolder();
+    this.accessHazards = new CacheHolder();
   }
 
   private class CacheHolder {
@@ -110,6 +121,7 @@ public class ProcessorCache {
       if (!initialized) {
         synchronized (lock) {
           if (!initialized) {
+            LOGGER.debug("Initialization successful");
             this.cache = cacheItem;
             this.initialized = true;
           }
