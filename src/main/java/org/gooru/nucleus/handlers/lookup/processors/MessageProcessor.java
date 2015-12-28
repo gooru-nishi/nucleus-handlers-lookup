@@ -38,9 +38,27 @@ class MessageProcessor implements Processor {
       prefs = ((JsonObject)message.body()).getJsonObject(MessageConstants.MSG_KEY_PREFS);
       request = ((JsonObject)message.body()).getJsonObject(MessageConstants.MSG_HTTP_BODY);
       switch (msgOp) {
-      case MessageConstants.MSG_OP_LKUP_ACCESS_HAZARDS:
-        result = processAccessHazards();
-        break;
+        case MessageConstants.MSG_OP_LKUP_ACCESS_HAZARDS:
+          result = processAccessHazards();
+          break;
+        case MessageConstants.MSG_OP_21_CEN_SKILLS:
+          result = process21CenSkills();
+          break;
+        case MessageConstants.MSG_OP_LKUP_AD_STATUS:
+          result = processAdStatus();
+          break;
+        case MessageConstants.MSG_OP_LKUP_EDU_USE:
+          result = processEducationalUse();
+          break;
+        case MessageConstants.MSG_OP_LKUP_GRADE:
+          result = processGrades();
+          break;
+        case MessageConstants.MSG_OP_LKUP_MEDIA_FEATURES:
+          result = processMediaFeatures();
+          break;
+        case MessageConstants.MSG_OP_LKUP_READ_LEVEL:
+          result = processReadingLevels();
+          break;
       default:
         LOGGER.error("Invalid operation type passed in, not able to handle");
         throw new InvalidRequestException();
@@ -52,6 +70,30 @@ class MessageProcessor implements Processor {
       // TODO: handle exception
     }
 
+    return null;
+  }
+
+  private JsonObject processReadingLevels() {
+    return null;
+  }
+
+  private JsonObject processMediaFeatures() {
+    return null;
+  }
+
+  private JsonObject processGrades() {
+    return null;
+  }
+
+  private JsonObject processEducationalUse() {
+    return null;
+  }
+
+  private JsonObject processAdStatus() {
+    return null;
+  }
+
+  private JsonObject process21CenSkills() {
     return null;
   }
 
