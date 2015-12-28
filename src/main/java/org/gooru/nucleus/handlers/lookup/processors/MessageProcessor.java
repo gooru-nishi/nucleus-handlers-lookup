@@ -41,7 +41,7 @@ class MessageProcessor implements Processor {
         case MessageConstants.MSG_OP_LKUP_ACCESS_HAZARDS:
           result = processAccessHazards();
           break;
-        case MessageConstants.MSG_OP_21_CEN_SKILLS:
+        case MessageConstants.MSG_OP_LKUP_21_CEN_SKILLS:
           result = process21CenSkills();
           break;
         case MessageConstants.MSG_OP_LKUP_AD_STATUS:
@@ -74,34 +74,102 @@ class MessageProcessor implements Processor {
   }
 
   private JsonObject processReadingLevels() {
+    JsonObject result = ProcessorCache.getInstance().getReadingLevels();
+    if (result != null) {
+      return result;
+    } else {
+      // TODO: Initialize from DB
+
+      // Update the cache item
+
+      // process and return
+    }
     return null;
   }
 
   private JsonObject processMediaFeatures() {
+    JsonObject result = ProcessorCache.getInstance().getMediaFeatures();
+    if (result != null) {
+      return result;
+    } else {
+      // TODO: Initialize from DB
+
+      // Update the cache item
+
+      // process and return
+    }
     return null;
   }
 
   private JsonObject processGrades() {
+    JsonObject result = ProcessorCache.getInstance().getGrades();
+    if (result != null) {
+      return result;
+    } else {
+      // TODO: Initialize from DB
+
+      // Update the cache item
+
+      // process and return
+    }
     return null;
   }
 
   private JsonObject processEducationalUse() {
+    JsonObject result = ProcessorCache.getInstance().getEducationalUse();
+    if (result != null) {
+      return result;
+    } else {
+      // TODO: Initialize from DB
+
+      // Update the cache item
+
+      // process and return
+    }
     return null;
   }
 
   private JsonObject processAdStatus() {
+    JsonObject result = ProcessorCache.getInstance().getAdStatus();
+    if (result != null) {
+      return result;
+    } else {
+      // TODO: Initialize from DB
+
+      // Update the cache item
+
+      // process and return
+    }
     return null;
   }
 
   private JsonObject process21CenSkills() {
+    JsonObject result = ProcessorCache.getInstance().getCenSkills();
+    if (result != null) {
+      return result;
+    } else {
+      // TODO: Initialize from DB
+
+      // Update the cache item
+
+      // process and return
+    }
     return null;
   }
 
 
   private JsonObject processAccessHazards() {
-    // TODO Auto-generated method stub
-    
-    return null;    
+    JsonObject result = ProcessorCache.getInstance().getAccessHazards();
+    if (result != null) {
+      return result;
+    } else {
+      // TODO: Initialize from DB
+
+      // Update the cache item
+
+      // process and return
+    }
+    return null;
   }
 
 }
