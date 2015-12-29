@@ -134,6 +134,9 @@ public class ProcessorCache {
     }
 
     public JsonObject getCachedValue() {
+      if (this.cache == null) {
+        return null;
+      }
       return this.cache.copy();
     }
 

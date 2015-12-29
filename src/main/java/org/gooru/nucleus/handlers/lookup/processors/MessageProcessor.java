@@ -5,6 +5,7 @@ import io.vertx.core.json.JsonObject;
 import org.gooru.nucleus.handlers.lookup.constants.MessageConstants;
 import org.gooru.nucleus.handlers.lookup.processors.exceptions.InvalidRequestException;
 import org.gooru.nucleus.handlers.lookup.processors.exceptions.InvalidUserException;
+import org.gooru.nucleus.handlers.lookup.processors.repositories.RepoBuilder;
 import org.gooru.nucleus.handlers.lookup.processors.responses.transformers.ResponseTransformerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,9 @@ class MessageProcessor implements Processor {
     } catch (InvalidUserException e) {
       LOGGER.warn("Caught Invalid User while processing", e);
       return new ResponseTransformerBuilder().build(e).transform();
+    } catch (Throwable throwable) {
+      LOGGER.warn("Caught unexpected exception here", throwable);
+      return new ResponseTransformerBuilder().build(throwable).transform();
     }
   }
 
@@ -79,13 +83,12 @@ class MessageProcessor implements Processor {
     if (result != null) {
       return result;
     } else {
-      // TODO: Initialize from DB
-
+      result = new RepoBuilder().buildMetadataRepo().getReadingLevels();
       // Update the cache item
-
+      ProcessorCache.getInstance().setReadingLevels(result);
       // process and return
+      return new ResponseTransformerBuilder().build(result).transform();
     }
-    return null;
   }
 
   private JsonObject processMediaFeatures() {
@@ -93,13 +96,12 @@ class MessageProcessor implements Processor {
     if (result != null) {
       return result;
     } else {
-      // TODO: Initialize from DB
-
+      result = new RepoBuilder().buildMetadataRepo().getMediaFeatures();
       // Update the cache item
-
+      ProcessorCache.getInstance().setMediaFeatures(result);
       // process and return
+      return new ResponseTransformerBuilder().build(result).transform();
     }
-    return null;
   }
 
   private JsonObject processGrades() {
@@ -107,13 +109,12 @@ class MessageProcessor implements Processor {
     if (result != null) {
       return result;
     } else {
-      // TODO: Initialize from DB
-
+      result = new RepoBuilder().buildMetadataRepo().getGrades();
       // Update the cache item
-
+      ProcessorCache.getInstance().setMediaFeatures(result);
       // process and return
+      return new ResponseTransformerBuilder().build(result).transform();
     }
-    return null;
   }
 
   private JsonObject processEducationalUse() {
@@ -121,13 +122,12 @@ class MessageProcessor implements Processor {
     if (result != null) {
       return result;
     } else {
-      // TODO: Initialize from DB
-
+      result = new RepoBuilder().buildMetadataRepo().getEducationalUse();
       // Update the cache item
-
+      ProcessorCache.getInstance().setEducationalUse(result);
       // process and return
+      return new ResponseTransformerBuilder().build(result).transform();
     }
-    return null;
   }
 
   private JsonObject processAdStatus() {
@@ -135,13 +135,12 @@ class MessageProcessor implements Processor {
     if (result != null) {
       return result;
     } else {
-      // TODO: Initialize from DB
-
+      result = new RepoBuilder().buildMetadataRepo().getAdStatus();
       // Update the cache item
-
+      ProcessorCache.getInstance().setMediaFeatures(result);
       // process and return
+      return new ResponseTransformerBuilder().build(result).transform();
     }
-    return null;
   }
 
   private JsonObject process21CenSkills() {
@@ -149,13 +148,12 @@ class MessageProcessor implements Processor {
     if (result != null) {
       return result;
     } else {
-      // TODO: Initialize from DB
-
+      result = new RepoBuilder().buildCen21SkillsRepo().getCen21Skills();
       // Update the cache item
-
+      ProcessorCache.getInstance().setCenSkills(result);
       // process and return
+      return new ResponseTransformerBuilder().build(result).transform();
     }
-    return null;
   }
 
 
@@ -164,13 +162,12 @@ class MessageProcessor implements Processor {
     if (result != null) {
       return result;
     } else {
-      // TODO: Initialize from DB
-
+      result = new RepoBuilder().buildMetadataRepo().getAccessHazards();
       // Update the cache item
-
+      ProcessorCache.getInstance().setMediaFeatures(result);
       // process and return
+      return new ResponseTransformerBuilder().build(result).transform();
     }
-    return null;
   }
 
 }

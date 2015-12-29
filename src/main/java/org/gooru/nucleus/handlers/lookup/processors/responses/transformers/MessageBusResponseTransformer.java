@@ -47,7 +47,7 @@ class MessageBusResponseTransformer implements ResponseTransformer {
     }
     JsonObject body = getHttpBody();
     transformedResponse.put(MessageConstants.MSG_HTTP_BODY, body);
-    return null;
+    return transformedResponse;
   }
 
   private JsonObject getHttpHeaders() {

@@ -7,6 +7,6 @@
   	"dataSourceClassName" : "org.postgresql.ds.PGSimpleDataSource",
   	"autoCommit" : false,
   	"jdbcUrl" : "jdbc:postgresql://localhost:5432/nucleus",
-  	"maximumPoolSize" : 5
+  	"maximumPoolSize" : 2
   }
 }

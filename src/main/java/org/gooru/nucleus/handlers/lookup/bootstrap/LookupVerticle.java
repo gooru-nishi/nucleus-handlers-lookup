@@ -25,8 +25,11 @@ public class LookupVerticle extends AbstractVerticle {
   @Override
   public void start(Future<Void> voidFuture) throws Exception {
 
+    vertx.deployVerticle("org.gooru.nucleus.handlers.lookup.bootstrap.DummyVerticle");
     vertx.executeBlocking(blockingFuture -> {
       startApplication();
+      blockingFuture.complete();
+      LOGGER.debug("Application machinery startup successfully completed");
     }, future -> {
       if (future.succeeded()) {
         voidFuture.complete();
@@ -42,13 +45,17 @@ public class LookupVerticle extends AbstractVerticle {
       LOGGER.debug("Received message: " + message.body());
 
       vertx.executeBlocking(future -> {
+        LOGGER.debug("Dispatching the request to worker thread for processing");
         JsonObject result = new ProcessorBuilder(message).build().process();
+        LOGGER.debug("Processor responded with result: {} ", result);
         future.complete(result);
       }, res -> {
+        LOGGER.debug("Worker thread done. Taking processing forward.");
         JsonObject result = (JsonObject) res.result();
+        LOGGER.debug("Got result object, will reply to message");
         DeliveryOptions options = new DeliveryOptions().addHeader(MessageConstants.MSG_OP_STATUS, result.getString(MessageConstants.MSG_OP_STATUS));
         message.reply(result.getJsonObject(MessageConstants.RESP_CONTAINER_MBUS), options);
-
+        LOGGER.debug("Sent reply to message. Will process event data now.");
         JsonObject eventData = result.getJsonObject(MessageConstants.RESP_CONTAINER_EVENT);
         if (eventData != null) {
           eb.publish(MessagebusEndpoints.MBEP_EVENT, eventData);

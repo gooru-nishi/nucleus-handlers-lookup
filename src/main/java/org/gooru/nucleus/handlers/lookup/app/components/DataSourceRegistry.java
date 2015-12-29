@@ -54,12 +54,21 @@ public class DataSourceRegistry implements Initializer, Finalizer {
   }
   
   public DataSource getDefaultDataSource() {
-    return registry.get(DEFAULT_DATA_SOURCE);
+    DataSource dataSource = registry.get(DEFAULT_DATA_SOURCE);
+    if (dataSource == null) {
+      LOGGER.error("Not able to find default data source. Will return null");
+    }
+    return dataSource;
   }
   
   public DataSource getDataSourceByName(String name) {
     if (name != null) {
-      return registry.get(name);
+      DataSource dataSource =  registry.get(name);
+      if (dataSource == null) {
+        LOGGER.error("Not able to find data source named {}. Will return null ", name);
+      }
+    } else {
+      LOGGER.error("Invalid name passed for data source. Returning null");
     }
     return null;
   }
