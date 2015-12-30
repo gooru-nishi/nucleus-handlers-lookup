@@ -103,7 +103,7 @@ class MessageProcessor implements Processor {
     if (result == null) {
       result = new RepoBuilder().buildMetadataRepo().getGrades();
       // Update the cache item
-      ProcessorCache.getInstance().setMediaFeatures(result);
+      ProcessorCache.getInstance().setGrades(result);
     }
     return result;
   }
@@ -123,7 +123,7 @@ class MessageProcessor implements Processor {
     if (result == null) {
       result = new RepoBuilder().buildMetadataRepo().getAdStatus();
       // Update the cache item
-      ProcessorCache.getInstance().setMediaFeatures(result);
+      ProcessorCache.getInstance().setAdStatus(result);
     }
     return result;
   }
@@ -144,7 +144,7 @@ class MessageProcessor implements Processor {
     if (result == null) {
       result = new RepoBuilder().buildMetadataRepo().getAccessHazards();
       // Update the cache item
-      ProcessorCache.getInstance().setMediaFeatures(result);
+      ProcessorCache.getInstance().setAccessHazards(result);
     }
     return result;
   }
