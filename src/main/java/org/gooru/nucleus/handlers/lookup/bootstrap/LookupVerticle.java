@@ -25,7 +25,6 @@ public class LookupVerticle extends AbstractVerticle {
   @Override
   public void start(Future<Void> voidFuture) throws Exception {
 
-    vertx.deployVerticle("org.gooru.nucleus.handlers.lookup.bootstrap.DummyVerticle");
     vertx.executeBlocking(blockingFuture -> {
       startApplication();
       blockingFuture.complete();
