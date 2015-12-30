@@ -118,12 +118,14 @@ public class ProcessorCache {
     public CacheHolder() {};
 
     public void initialize(JsonObject cacheItem) {
-      if (!initialized) {
-        synchronized (lock) {
-          if (!initialized) {
-            LOGGER.debug("Initialization successful");
-            this.cache = cacheItem;
-            this.initialized = true;
+      if (cacheItem != null) {
+        if (!initialized) {
+          synchronized (lock) {
+            if (!initialized) {
+              LOGGER.debug("Initialization successful");
+              this.cache = cacheItem.copy();
+              this.initialized = true;
+            }
           }
         }
       }
