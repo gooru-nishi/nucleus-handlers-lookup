@@ -80,94 +80,73 @@ class MessageProcessor implements Processor {
 
   private JsonObject processReadingLevels() {
     JsonObject result = ProcessorCache.getInstance().getReadingLevels();
-    if (result != null) {
-      return result;
-    } else {
+    if (result == null) {
       result = new RepoBuilder().buildMetadataRepo().getReadingLevels();
       // Update the cache item
       ProcessorCache.getInstance().setReadingLevels(result);
-      // process and return
-      return new ResponseTransformerBuilder().build(result).transform();
     }
+    return result;
   }
 
   private JsonObject processMediaFeatures() {
     JsonObject result = ProcessorCache.getInstance().getMediaFeatures();
-    if (result != null) {
-      return result;
-    } else {
+    if (result == null) {
       result = new RepoBuilder().buildMetadataRepo().getMediaFeatures();
       // Update the cache item
       ProcessorCache.getInstance().setMediaFeatures(result);
-      // process and return
-      return new ResponseTransformerBuilder().build(result).transform();
     }
+    return result;
   }
 
   private JsonObject processGrades() {
     JsonObject result = ProcessorCache.getInstance().getGrades();
-    if (result != null) {
-      return result;
-    } else {
+    if (result == null) {
       result = new RepoBuilder().buildMetadataRepo().getGrades();
       // Update the cache item
       ProcessorCache.getInstance().setMediaFeatures(result);
-      // process and return
-      return new ResponseTransformerBuilder().build(result).transform();
     }
+    return result;
   }
 
   private JsonObject processEducationalUse() {
     JsonObject result = ProcessorCache.getInstance().getEducationalUse();
-    if (result != null) {
-      return result;
-    } else {
+    if (result == null) {
       result = new RepoBuilder().buildMetadataRepo().getEducationalUse();
       // Update the cache item
       ProcessorCache.getInstance().setEducationalUse(result);
-      // process and return
-      return new ResponseTransformerBuilder().build(result).transform();
     }
+    return result;
   }
 
   private JsonObject processAdStatus() {
     JsonObject result = ProcessorCache.getInstance().getAdStatus();
-    if (result != null) {
-      return result;
-    } else {
+    if (result == null) {
       result = new RepoBuilder().buildMetadataRepo().getAdStatus();
       // Update the cache item
       ProcessorCache.getInstance().setMediaFeatures(result);
-      // process and return
-      return new ResponseTransformerBuilder().build(result).transform();
     }
+    return result;
   }
 
   private JsonObject process21CenSkills() {
     JsonObject result = ProcessorCache.getInstance().getCenSkills();
-    if (result != null) {
-      return result;
-    } else {
+    if (result == null) {
       result = new RepoBuilder().buildCen21SkillsRepo().getCen21Skills();
       // Update the cache item
       ProcessorCache.getInstance().setCenSkills(result);
-      // process and return
-      return new ResponseTransformerBuilder().build(result).transform();
     }
+    return result;
   }
 
 
   private JsonObject processAccessHazards() {
     JsonObject result = ProcessorCache.getInstance().getAccessHazards();
-    if (result != null) {
-      return result;
-    } else {
+    if (result == null) {
       result = new RepoBuilder().buildMetadataRepo().getAccessHazards();
       // Update the cache item
       ProcessorCache.getInstance().setMediaFeatures(result);
-      // process and return
-      return new ResponseTransformerBuilder().build(result).transform();
     }
+    return result;
   }
 
 }
