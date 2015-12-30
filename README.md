@@ -20,7 +20,8 @@ DONE
 
 TODO
 ----
-* There are other lookups in form of enums in DB. Need to implement that (also lookup for 21st century skills)
+* There are other lookups in form of enums in DB. Need to implement that. They are moments of learning, depth of knowledge,
+   audience, 21st century skills
 * Handle exceptions for the transformers
 
 To understand build related stuff, take a look at **BUILD_README.md**.
