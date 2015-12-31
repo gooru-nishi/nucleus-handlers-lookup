@@ -110,9 +110,9 @@ public class ProcessorCache {
     this.accessHazards = new CacheHolder();
   }
 
-  private class CacheHolder {
+  private static class CacheHolder {
     JsonObject cache;
-    private boolean initialized = false;
+    private volatile boolean initialized = false;
     private Object lock = new Object();
 
     public CacheHolder() {};
