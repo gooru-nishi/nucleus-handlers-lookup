@@ -12,4 +12,7 @@ public interface MetadataRepo {
   JsonObject getEducationalUse();
   JsonObject getAdStatus();
   JsonObject getAccessHazards();
+  JsonObject getMomentsOfLearning();
+  JsonObject getDepthOfKnowledge();
+  JsonObject getAudience();
 }

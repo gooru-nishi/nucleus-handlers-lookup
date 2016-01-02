@@ -18,62 +18,65 @@ public class AJMetadataRepo implements MetadataRepo {
 
   @Override
   public JsonObject getReadingLevels() {
-    Base.open(DataSourceRegistry.getInstance().getDefaultDataSource());
-    LazyList<MetadataReference> result = MetadataReference.findBySQL(
+    return getMetadata("reading_level",
       "select label, sequence_id from metadata_reference where metadata_reference_type = 'reading_level' order by sequence_id");
-    JsonObject returnValue = new JsonObject().put("reading_level", new JsonArray(result.toJson(false, "label", "sequence_id")));
-    Base.close();
-    return returnValue;
   }
 
   @Override
   public JsonObject getMediaFeatures() {
-    Base.open(DataSourceRegistry.getInstance().getDefaultDataSource());
-    LazyList<MetadataReference> result = MetadataReference.findBySQL(
+    return getMetadata("media_feature",
       "select label, sequence_id from metadata_reference where metadata_reference_type = 'media_feature' order by sequence_id");
-    JsonObject returnValue = new JsonObject().put("media_feature", new JsonArray(result.toJson(false, "label", "sequence_id")));
-    Base.close();
-    return returnValue;
-
   }
 
   @Override
   public JsonObject getGrades() {
-    Base.open(DataSourceRegistry.getInstance().getDefaultDataSource());
-    // TODO: Fix it
-    LazyList<MetadataReference> result = MetadataReference.findBySQL(
-      "select label, sequence_id from metadata_reference where metadata_reference_type = 'reading_level' order by sequence_id");
-    JsonObject returnValue = new JsonObject().put("reading_level", new JsonArray(result.toJson(false, "label", "sequence_id")));
-    Base.close();
-    return returnValue;
+    // TODO: Verify if this is fixed at DB level
+    return getMetadata("grade",
+      "select label, sequence_id from metadata_reference where metadata_reference_type = 'grade' order by sequence_id");
   }
 
   @Override
   public JsonObject getEducationalUse() {
-    Base.open(DataSourceRegistry.getInstance().getDefaultDataSource());
-    LazyList<MetadataReference> result = MetadataReference.findBySQL(
+    return getMetadata("educational_use",
       "select label, sequence_id from metadata_reference where metadata_reference_type = 'educational_use' order by sequence_id");
-    JsonObject returnValue = new JsonObject().put("educational_use", new JsonArray(result.toJson(false, "label", "sequence_id")));
-    Base.close();
-    return returnValue;
   }
 
   @Override
   public JsonObject getAdStatus() {
-    Base.open(DataSourceRegistry.getInstance().getDefaultDataSource());
-    LazyList<MetadataReference> result = MetadataReference.findBySQL(
+    return getMetadata("advertisement_level",
       "select label, sequence_id from metadata_reference where metadata_reference_type = 'advertisement_level' order by sequence_id");
-    JsonObject returnValue = new JsonObject().put("advertisement_level", new JsonArray(result.toJson(false, "label", "sequence_id")));
-    Base.close();
-    return returnValue;
   }
 
   @Override
   public JsonObject getAccessHazards() {
-    Base.open(DataSourceRegistry.getInstance().getDefaultDataSource());
-    LazyList<MetadataReference> result = MetadataReference.findBySQL(
+    return getMetadata("hazard_level",
       "select label, sequence_id from metadata_reference where metadata_reference_type = 'hazard_level' order by sequence_id");
-    JsonObject returnValue = new JsonObject().put("hazard_level", new JsonArray(result.toJson(false, "label", "sequence_id")));
+
+  }
+
+  @Override
+  public JsonObject getMomentsOfLearning() {
+    return getMetadata("moments_of_learning",
+      "select label, sequence_id from metadata_reference where metadata_reference_type = 'moments_of_learning' order by sequence_id");
+
+  }
+
+  @Override
+  public JsonObject getDepthOfKnowledge() {
+    return getMetadata("depth_of_knowledge",
+      "select label, sequence_id from metadata_reference where metadata_reference_type = 'depth_of_knowledge' order by sequence_id");
+  }
+
+  @Override
+  public JsonObject getAudience() {
+    return getMetadata("audience",
+      "select label, sequence_id from metadata_reference where metadata_reference_type = 'audience' order by sequence_id");
+  }
+
+  private JsonObject getMetadata(String name, String sql) {
+    Base.open(DataSourceRegistry.getInstance().getDefaultDataSource());
+    LazyList<MetadataReference> result = MetadataReference.findBySQL(sql);
+    JsonObject returnValue = new JsonObject().put(name, new JsonArray(result.toJson(false, "label", "sequence_id")));
     Base.close();
     return returnValue;
   }
