@@ -28,6 +28,9 @@ public class MessageConstants {
   public static final String MSG_OP_LKUP_GRADE = "grades";
   public static final String MSG_OP_LKUP_21_CEN_SKILLS = "21.cen.skills";
 
+  public static final String MSG_OP_LKUP_AUDIENCE = "audience";
+  public static final String MSG_OP_LKUP_MOL = "moments.of.learning";
+  public static final String MSG_OP_LKUP_DOK = "dok";
 
 
   // Containers for different responses

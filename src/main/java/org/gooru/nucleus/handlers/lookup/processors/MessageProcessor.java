@@ -61,6 +61,15 @@ class MessageProcessor implements Processor {
         case MessageConstants.MSG_OP_LKUP_READ_LEVEL:
           result = processReadingLevels();
           break;
+        case MessageConstants.MSG_OP_LKUP_DOK:
+          result = processDepthOfKnowledge();
+          break;
+        case MessageConstants.MSG_OP_LKUP_AUDIENCE:
+          result = processAudience();
+          break;
+        case MessageConstants.MSG_OP_LKUP_MOL:
+          result = processMomentsOfLearning();
+          break;
       default:
         LOGGER.error("Invalid operation type passed in, not able to handle");
         throw new InvalidRequestException();
