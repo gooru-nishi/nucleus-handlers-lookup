@@ -18,6 +18,9 @@ public class ProcessorCache {
   private CacheHolder adStatus;
   private CacheHolder cenSkills;
   private CacheHolder accessHazards;
+  private CacheHolder momentsOfLearning;
+  private CacheHolder depthOfKnowledge;
+  private CacheHolder audience;
 
   public JsonObject getReadingLevels() {
     return readingLevels.getCachedValue();
@@ -96,6 +99,39 @@ public class ProcessorCache {
     }
   }
 
+
+  public JsonObject getMomentsOfLearning() {
+    return this.momentsOfLearning.getCachedValue();
+  }
+
+  public void setMomentsOfLearning(JsonObject momentsOfLearning) {
+    if (momentsOfLearning != null) {
+      LOGGER.debug("Trying to initialize moments of learning");
+      this.momentsOfLearning.initialize(momentsOfLearning);
+    }
+  }
+
+  public JsonObject getDepthOfKnowledge() {
+    return this.depthOfKnowledge.getCachedValue();
+  }
+
+  public void setDepthOfKnowledge(JsonObject depthOfKnowledge) {
+    if (depthOfKnowledge != null) {
+      LOGGER.debug("Trying to initialize depth of knowledge");
+      this.depthOfKnowledge.initialize(depthOfKnowledge);
+    }  }
+
+  public JsonObject getAudience() {
+    return this.audience.getCachedValue();
+  }
+
+  public void setAudience(JsonObject audience) {
+    if (audience != null) {
+      LOGGER.debug("Trying to initialize audience");
+      this.audience.initialize(audience);
+    }
+  }
+
   public static ProcessorCache getInstance() {
     return INSTANCE;
   }
@@ -108,14 +144,18 @@ public class ProcessorCache {
     this.adStatus = new CacheHolder();
     this.cenSkills = new CacheHolder();
     this.accessHazards = new CacheHolder();
+    this.momentsOfLearning = new CacheHolder();
+    this.audience = new CacheHolder();
+    this.depthOfKnowledge = new CacheHolder();
   }
+
 
   private static class CacheHolder {
     JsonObject cache;
     private volatile boolean initialized = false;
-    private Object lock = new Object();
+    private final Object lock = new Object();
 
-    public CacheHolder() {};
+    public CacheHolder() {}
 
     public void initialize(JsonObject cacheItem) {
       if (cacheItem != null) {

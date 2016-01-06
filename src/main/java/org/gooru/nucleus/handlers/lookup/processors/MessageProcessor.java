@@ -149,4 +149,37 @@ class MessageProcessor implements Processor {
     return result;
   }
 
+  private JsonObject processMomentsOfLearning() {
+    JsonObject result = ProcessorCache.getInstance().getMomentsOfLearning();
+    if (result == null) {
+      result = new RepoBuilder().buildMetadataRepo().getMomentsOfLearning();
+      // Update the cache item
+      ProcessorCache.getInstance().setMomentsOfLearning(result);
+    }
+    return result;
+
+  }
+
+  private JsonObject processDepthOfKnowledge() {
+    JsonObject result = ProcessorCache.getInstance().getDepthOfKnowledge();
+    if (result == null) {
+      result = new RepoBuilder().buildMetadataRepo().getDepthOfKnowledge();
+      // Update the cache item
+      ProcessorCache.getInstance().setDepthOfKnowledge(result);
+    }
+    return result;
+
+  }
+
+  private JsonObject processAudience() {
+    JsonObject result = ProcessorCache.getInstance().getAudience();
+    if (result == null) {
+      result = new RepoBuilder().buildMetadataRepo().getAudience();
+      // Update the cache item
+      ProcessorCache.getInstance().setAudience(result);
+    }
+    return result;
+
+  }
+
 }
