@@ -67,7 +67,7 @@ class MessageProcessor implements Processor {
         case MessageConstants.MSG_OP_LKUP_AUDIENCE:
           result = processAudience();
           break;
-        case MessageConstants.MSG_OP_LKUP_MOL:
+        case MessageConstants.MSG_OP_LKUP_MOMENTS:
           result = processMomentsOfLearning();
           break;
       default:
