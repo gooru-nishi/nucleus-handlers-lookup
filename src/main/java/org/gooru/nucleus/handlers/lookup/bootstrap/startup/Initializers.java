@@ -1,10 +1,10 @@
 package org.gooru.nucleus.handlers.lookup.bootstrap.startup;
 
+import org.gooru.nucleus.handlers.lookup.app.components.DataSourceRegistry;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.gooru.nucleus.handlers.lookup.app.components.DataSourceRegistry;
 
 public class Initializers implements Iterable<Initializer> {
 

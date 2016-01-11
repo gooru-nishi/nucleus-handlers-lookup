@@ -1,10 +1,10 @@
 package org.gooru.nucleus.handlers.lookup.bootstrap.shutdown;
 
+import org.gooru.nucleus.handlers.lookup.app.components.DataSourceRegistry;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.gooru.nucleus.handlers.lookup.app.components.DataSourceRegistry;
 
 public class Finalizers implements Iterable<Finalizer> {
 
