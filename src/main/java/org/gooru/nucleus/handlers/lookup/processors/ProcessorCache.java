@@ -11,16 +11,33 @@ public class ProcessorCache {
   private static final ProcessorCache INSTANCE = new ProcessorCache();
   private static final Logger LOGGER = LoggerFactory.getLogger(ProcessorCache.class);
 
-  private CacheHolder readingLevels;
-  private CacheHolder mediaFeatures;
-  private CacheHolder grades;
-  private CacheHolder educationalUse;
-  private CacheHolder adStatus;
-  private CacheHolder cenSkills;
-  private CacheHolder accessHazards;
-  private CacheHolder momentsOfLearning;
-  private CacheHolder depthOfKnowledge;
-  private CacheHolder audience;
+  private final CacheHolder readingLevels;
+  private final CacheHolder mediaFeatures;
+  private final CacheHolder grades;
+  private final CacheHolder educationalUse;
+  private final CacheHolder adStatus;
+  private final CacheHolder cenSkills;
+  private final CacheHolder accessHazards;
+  private final CacheHolder momentsOfLearning;
+  private final CacheHolder depthOfKnowledge;
+  private final CacheHolder audience;
+
+  private ProcessorCache() {
+    this.readingLevels = new CacheHolder();
+    this.mediaFeatures = new CacheHolder();
+    this.grades = new CacheHolder();
+    this.educationalUse = new CacheHolder();
+    this.adStatus = new CacheHolder();
+    this.cenSkills = new CacheHolder();
+    this.accessHazards = new CacheHolder();
+    this.momentsOfLearning = new CacheHolder();
+    this.audience = new CacheHolder();
+    this.depthOfKnowledge = new CacheHolder();
+  }
+
+  public static ProcessorCache getInstance() {
+    return INSTANCE;
+  }
 
   public JsonObject getReadingLevels() {
     return readingLevels.getCachedValue();
@@ -99,7 +116,6 @@ public class ProcessorCache {
     }
   }
 
-
   public JsonObject getMomentsOfLearning() {
     return this.momentsOfLearning.getCachedValue();
   }
@@ -119,7 +135,8 @@ public class ProcessorCache {
     if (depthOfKnowledge != null) {
       LOGGER.debug("Trying to initialize depth of knowledge");
       this.depthOfKnowledge.initialize(depthOfKnowledge);
-    }  }
+    }
+  }
 
   public JsonObject getAudience() {
     return this.audience.getCachedValue();
@@ -132,30 +149,13 @@ public class ProcessorCache {
     }
   }
 
-  public static ProcessorCache getInstance() {
-    return INSTANCE;
-  }
-
-  private ProcessorCache() {
-    this.readingLevels = new CacheHolder();
-    this.mediaFeatures = new CacheHolder();
-    this.grades = new CacheHolder();
-    this.educationalUse = new CacheHolder();
-    this.adStatus = new CacheHolder();
-    this.cenSkills = new CacheHolder();
-    this.accessHazards = new CacheHolder();
-    this.momentsOfLearning = new CacheHolder();
-    this.audience = new CacheHolder();
-    this.depthOfKnowledge = new CacheHolder();
-  }
-
-
   private static class CacheHolder {
+    private final Object lock = new Object();
     JsonObject cache;
     private volatile boolean initialized = false;
-    private final Object lock = new Object();
 
-    public CacheHolder() {}
+    public CacheHolder() {
+    }
 
     public void initialize(JsonObject cacheItem) {
       if (cacheItem != null) {

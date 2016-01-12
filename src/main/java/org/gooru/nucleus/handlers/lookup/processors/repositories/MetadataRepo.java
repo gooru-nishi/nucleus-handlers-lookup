@@ -7,12 +7,20 @@ import io.vertx.core.json.JsonObject;
  */
 public interface MetadataRepo {
   JsonObject getReadingLevels();
+
   JsonObject getMediaFeatures();
+
   JsonObject getGrades();
+
   JsonObject getEducationalUse();
+
   JsonObject getAdStatus();
+
   JsonObject getAccessHazards();
+
   JsonObject getMomentsOfLearning();
+
   JsonObject getDepthOfKnowledge();
+
   JsonObject getAudience();
 }

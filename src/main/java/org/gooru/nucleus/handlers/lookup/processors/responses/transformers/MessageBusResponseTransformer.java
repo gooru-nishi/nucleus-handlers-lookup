@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 
 class MessageBusResponseTransformer implements ResponseTransformer {
 
-  static final Logger LOG = LoggerFactory.getLogger(ResponseTransformer.class);
-  private JsonObject inputToTransform;
+  private static final Logger LOG = LoggerFactory.getLogger(ResponseTransformer.class);
+  private final JsonObject inputToTransform;
   private JsonObject transformedOutput;
   private boolean transformed = false;
 
@@ -58,7 +58,7 @@ class MessageBusResponseTransformer implements ResponseTransformer {
 
   private JsonObject getHttpBody() {
     // We never return null from this method
-    if (inputToTransform != null ) {
+    if (inputToTransform != null) {
       return new JsonObject().put(MessageConstants.MSG_HTTP_RESPONSE, inputToTransform);
     } else {
       return new JsonObject().put(MessageConstants.MSG_HTTP_RESPONSE, new JsonObject());

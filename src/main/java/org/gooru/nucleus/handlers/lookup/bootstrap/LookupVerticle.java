@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LookupVerticle extends AbstractVerticle {
 
-  static final Logger LOGGER = LoggerFactory.getLogger(LookupVerticle.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(LookupVerticle.class);
 
   @Override
   public void start(Future<Void> voidFuture) throws Exception {
@@ -85,7 +85,7 @@ public class LookupVerticle extends AbstractVerticle {
       for (Initializer initializer : initializers) {
         initializer.initializeComponent(vertx, config());
       }
-    } catch(IllegalStateException ie) {
+    } catch (IllegalStateException ie) {
       LOGGER.error("Error initializing application", ie);
       Runtime.getRuntime().halt(1);
     }
@@ -93,7 +93,7 @@ public class LookupVerticle extends AbstractVerticle {
 
   private void shutDownApplication() {
     Finalizers finalizers = new Finalizers();
-    for (Finalizer finalizer : finalizers ) {
+    for (Finalizer finalizer : finalizers) {
       finalizer.finalizeComponent();
     }
 
