@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by ashish on 28/12/15.
  */
-public class ProcessorCache {
+public final class ProcessorCache {
   private static final ProcessorCache INSTANCE = new ProcessorCache();
   private static final Logger LOGGER = LoggerFactory.getLogger(ProcessorCache.class);
 
@@ -151,7 +151,7 @@ public class ProcessorCache {
 
   private static class CacheHolder {
     private final Object lock = new Object();
-    JsonObject cache;
+    private JsonObject cache;
     private volatile boolean initialized = false;
 
     public CacheHolder() {

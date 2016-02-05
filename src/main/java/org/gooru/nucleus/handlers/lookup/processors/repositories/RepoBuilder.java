@@ -5,12 +5,17 @@ import org.gooru.nucleus.handlers.lookup.processors.repositories.activejdbc.Acti
 /**
  * Created by ashish on 29/12/15.
  */
-public class RepoBuilder {
-  public MetadataRepo buildMetadataRepo() {
-    return new ActiveJdbcRepoBuilder().buildMetadataRepo();
+public final class RepoBuilder {
+
+  private RepoBuilder() {
+    throw new AssertionError();
   }
 
-  public Cen21SkillsRepo buildCen21SkillsRepo() {
-    return new ActiveJdbcRepoBuilder().buildCen21SkillsRepo();
+  public static MetadataRepo buildMetadataRepo() {
+    return ActiveJdbcRepoBuilder.buildMetadataRepo();
+  }
+
+  public static Cen21SkillsRepo buildCen21SkillsRepo() {
+    return ActiveJdbcRepoBuilder.buildCen21SkillsRepo();
   }
 }

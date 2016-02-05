@@ -6,13 +6,17 @@ import org.gooru.nucleus.handlers.lookup.processors.repositories.MetadataRepo;
 /**
  * Created by ashish on 29/12/15.
  */
-public class ActiveJdbcRepoBuilder {
+public final class ActiveJdbcRepoBuilder {
 
-  public MetadataRepo buildMetadataRepo() {
+  private ActiveJdbcRepoBuilder() {
+    throw new AssertionError();
+  }
+
+  public static MetadataRepo buildMetadataRepo() {
     return new AJMetadataRepo();
   }
 
-  public Cen21SkillsRepo buildCen21SkillsRepo() {
+  public static Cen21SkillsRepo buildCen21SkillsRepo() {
     return new AJCen21SkillsRepo();
   }
 }

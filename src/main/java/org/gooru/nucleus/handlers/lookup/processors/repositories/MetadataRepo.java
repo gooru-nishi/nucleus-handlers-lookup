@@ -1,26 +1,26 @@
 package org.gooru.nucleus.handlers.lookup.processors.repositories;
 
-import io.vertx.core.json.JsonObject;
+import org.gooru.nucleus.handlers.lookup.processors.responses.MessageResponse;
 
 /**
  * Created by ashish on 29/12/15.
  */
 public interface MetadataRepo {
-  JsonObject getReadingLevels();
+  MessageResponse getReadingLevels();
 
-  JsonObject getMediaFeatures();
+  MessageResponse getMediaFeatures();
 
-  JsonObject getGrades();
+  MessageResponse getGrades();
 
-  JsonObject getEducationalUse();
+  MessageResponse getEducationalUse();
 
-  JsonObject getAdStatus();
+  MessageResponse getAdStatus();
 
-  JsonObject getAccessHazards();
+  MessageResponse getAccessHazards();
 
-  JsonObject getMomentsOfLearning();
+  MessageResponse getMomentsOfLearning();
 
-  JsonObject getDepthOfKnowledge();
+  MessageResponse getDepthOfKnowledge();
 
-  JsonObject getAudience();
+  MessageResponse getAudience();
 }

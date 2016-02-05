@@ -2,16 +2,14 @@ package org.gooru.nucleus.handlers.lookup.bootstrap;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
-import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.EventBus;
-import io.vertx.core.json.JsonObject;
 import org.gooru.nucleus.handlers.lookup.bootstrap.shutdown.Finalizer;
 import org.gooru.nucleus.handlers.lookup.bootstrap.shutdown.Finalizers;
 import org.gooru.nucleus.handlers.lookup.bootstrap.startup.Initializer;
 import org.gooru.nucleus.handlers.lookup.bootstrap.startup.Initializers;
-import org.gooru.nucleus.handlers.lookup.constants.MessageConstants;
 import org.gooru.nucleus.handlers.lookup.constants.MessagebusEndpoints;
 import org.gooru.nucleus.handlers.lookup.processors.ProcessorBuilder;
+import org.gooru.nucleus.handlers.lookup.processors.responses.MessageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,31 +37,13 @@ public class LookupVerticle extends AbstractVerticle {
 
     EventBus eb = vertx.eventBus();
 
-    eb.consumer(MessagebusEndpoints.MBEP_LOOKUP, message -> {
-
-      LOGGER.debug("Received message: " + message.body());
-
-      vertx.executeBlocking(future -> {
-        LOGGER.debug("Dispatching the request to worker thread for processing");
-        JsonObject result = new ProcessorBuilder(message).build().process();
-        LOGGER.debug("Processor responded with result: {} ", result);
-        future.complete(result);
-      }, res -> {
-        LOGGER.debug("Worker thread done. Taking processing forward.");
-        JsonObject result = (JsonObject) res.result();
-        LOGGER.debug("Got result object, will reply to message");
-        DeliveryOptions options = new DeliveryOptions().addHeader(MessageConstants.MSG_OP_STATUS, result.getString(MessageConstants.MSG_OP_STATUS));
-        message.reply(result.getJsonObject(MessageConstants.RESP_CONTAINER_MBUS), options);
-        LOGGER.debug("Sent reply to message. Will process event data now.");
-        JsonObject eventData = result.getJsonObject(MessageConstants.RESP_CONTAINER_EVENT);
-        if (eventData != null) {
-          eb.publish(MessagebusEndpoints.MBEP_EVENT, eventData);
-        }
-
-      });
-
-
-    }).completionHandler(result -> {
+    eb.consumer(MessagebusEndpoints.MBEP_LOOKUP, message -> vertx.executeBlocking(future -> {
+      MessageResponse result = ProcessorBuilder.build(message).process();
+      future.complete(result);
+    }, res -> {
+      MessageResponse result = (MessageResponse) res.result();
+      message.reply(result.reply(), result.deliveryOptions());
+    })).completionHandler(result -> {
       if (result.succeeded()) {
         LOGGER.info("Lookup end point ready to listen");
       } else {

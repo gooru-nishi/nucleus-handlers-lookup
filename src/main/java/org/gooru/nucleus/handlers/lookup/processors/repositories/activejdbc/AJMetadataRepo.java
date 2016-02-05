@@ -1,82 +1,70 @@
 package org.gooru.nucleus.handlers.lookup.processors.repositories.activejdbc;
 
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
-import org.gooru.nucleus.handlers.lookup.app.components.DataSourceRegistry;
 import org.gooru.nucleus.handlers.lookup.processors.repositories.MetadataRepo;
-import org.gooru.nucleus.handlers.lookup.processors.repositories.activejdbc.entities.MetadataReference;
-import org.javalite.activejdbc.Base;
-import org.javalite.activejdbc.LazyList;
+import org.gooru.nucleus.handlers.lookup.processors.repositories.activejdbc.dbhandlers.DBHandlerBuilder;
+import org.gooru.nucleus.handlers.lookup.processors.repositories.activejdbc.transactions.TransactionExecutor;
+import org.gooru.nucleus.handlers.lookup.processors.responses.MessageResponse;
 
 /**
  * Created by ashish on 29/12/15.
  */
 public class AJMetadataRepo implements MetadataRepo {
 
-  private static final String DB_DEFAULT = "lookup";
+  private static final String[] FETCH_FIELDS = {"id", "label", "sequence_id"};
 
   @Override
-  public JsonObject getReadingLevels() {
-    return getMetadata("reading_level",
-      "select id, label, sequence_id from metadata_reference where format = 'reading_level' order by sequence_id");
+  public MessageResponse getReadingLevels() {
+    return getMetadata("reading_level", "select id, label, sequence_id from metadata_reference where format = 'reading_level' order by sequence_id");
   }
 
   @Override
-  public JsonObject getMediaFeatures() {
-    return getMetadata("media_feature",
-      "select id, label, sequence_id from metadata_reference where format = 'media_feature' order by sequence_id");
+  public MessageResponse getMediaFeatures() {
+    return getMetadata("media_feature", "select id, label, sequence_id from metadata_reference where format = 'media_feature' order by sequence_id");
   }
 
   @Override
-  public JsonObject getGrades() {
+  public MessageResponse getGrades() {
     // TODO: Verify if this is fixed at DB level
-    return getMetadata("grade",
-      "select id, label, sequence_id from metadata_reference where format = 'grade' order by sequence_id");
+    return getMetadata("grade", "select id, label, sequence_id from metadata_reference where format = 'grade' order by sequence_id");
   }
 
   @Override
-  public JsonObject getEducationalUse() {
+  public MessageResponse getEducationalUse() {
     return getMetadata("educational_use",
       "select id, label, sequence_id from metadata_reference where format = 'educational_use' order by sequence_id");
   }
 
   @Override
-  public JsonObject getAdStatus() {
+  public MessageResponse getAdStatus() {
     return getMetadata("advertisement_level",
       "select id, label, sequence_id from metadata_reference where format = 'advertisement_level' order by sequence_id");
   }
 
   @Override
-  public JsonObject getAccessHazards() {
-    return getMetadata("hazard_level",
-      "select id, label, sequence_id from metadata_reference where format = 'hazard_level' order by sequence_id");
+  public MessageResponse getAccessHazards() {
+    return getMetadata("hazard_level", "select id, label, sequence_id from metadata_reference where format = 'hazard_level' order by sequence_id");
 
   }
 
   @Override
-  public JsonObject getMomentsOfLearning() {
+  public MessageResponse getMomentsOfLearning() {
     return getMetadata("moments_of_learning",
       "select id, label, sequence_id from metadata_reference where format = 'moments_of_learning' order by sequence_id");
 
   }
 
   @Override
-  public JsonObject getDepthOfKnowledge() {
+  public MessageResponse getDepthOfKnowledge() {
     return getMetadata("depth_of_knowledge",
       "select id, label, sequence_id from metadata_reference where format = 'depth_of_knowledge' order by sequence_id");
   }
 
   @Override
-  public JsonObject getAudience() {
-    return getMetadata("audience",
-      "select id, label, sequence_id from metadata_reference where format = 'audience' order by sequence_id");
+  public MessageResponse getAudience() {
+    return getMetadata("audience", "select id, label, sequence_id from metadata_reference where format = 'audience' order by sequence_id");
   }
 
-  private JsonObject getMetadata(String name, String sql) {
-    Base.open(DataSourceRegistry.getInstance().getDefaultDataSource());
-    LazyList<MetadataReference> result = MetadataReference.findBySQL(sql);
-    JsonObject returnValue = new JsonObject().put(name, new JsonArray(result.toJson(false, "id", "label", "sequence_id")));
-    Base.close();
-    return returnValue;
+  private MessageResponse getMetadata(String name, String sql) {
+    return TransactionExecutor.executeTransaction(DBHandlerBuilder.fetchRowlistExecutorHandlerBuilder(name, sql, FETCH_FIELDS));
   }
 }

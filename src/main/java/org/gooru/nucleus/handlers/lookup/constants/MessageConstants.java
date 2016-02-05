@@ -1,6 +1,6 @@
 package org.gooru.nucleus.handlers.lookup.constants;
 
-public class MessageConstants {
+public final class MessageConstants {
 
   public static final String MSG_HEADER_OP = "mb.operation";
   public static final String MSG_HEADER_TOKEN = "session.token";
@@ -37,5 +37,8 @@ public class MessageConstants {
   public static final String RESP_CONTAINER_MBUS = "mb.container";
   public static final String RESP_CONTAINER_EVENT = "mb.event";
 
+  private MessageConstants() {
+    throw new AssertionError();
+  }
 
 }

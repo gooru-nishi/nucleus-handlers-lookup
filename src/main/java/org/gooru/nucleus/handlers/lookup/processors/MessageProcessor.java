@@ -3,17 +3,20 @@ package org.gooru.nucleus.handlers.lookup.processors;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import org.gooru.nucleus.handlers.lookup.constants.MessageConstants;
-import org.gooru.nucleus.handlers.lookup.processors.exceptions.InvalidRequestException;
-import org.gooru.nucleus.handlers.lookup.processors.exceptions.InvalidUserException;
 import org.gooru.nucleus.handlers.lookup.processors.repositories.RepoBuilder;
-import org.gooru.nucleus.handlers.lookup.processors.responses.transformers.ResponseTransformerBuilder;
+import org.gooru.nucleus.handlers.lookup.processors.responses.ExecutionResult;
+import org.gooru.nucleus.handlers.lookup.processors.responses.MessageResponse;
+import org.gooru.nucleus.handlers.lookup.processors.responses.MessageResponseFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ResourceBundle;
+import java.util.UUID;
 
 class MessageProcessor implements Processor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Processor.class);
-  private String userId;
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("messages");
   private JsonObject prefs;
   private JsonObject request;
   private final Message<Object> message;
@@ -23,20 +26,15 @@ class MessageProcessor implements Processor {
   }
 
   @Override
-  public JsonObject process() {
-    JsonObject result;
+  public MessageResponse process() {
+    MessageResponse result;
     try {
-      if (message == null || !(message.body() instanceof JsonObject)) {
-        LOGGER.error("Invalid message received, either null or body of message is not JsonObject ");
-        throw new InvalidRequestException();
+      ExecutionResult<MessageResponse> validateResult = validateAndInitialize();
+      if (validateResult.isCompleted()) {
+        return validateResult.result();
       }
-
       final String msgOp = message.headers().get(MessageConstants.MSG_HEADER_OP);
-      userId = ((JsonObject) message.body()).getString(MessageConstants.MSG_USER_ID);
-      if (userId == null) {
-        LOGGER.error("Invalid user id passed. Not authorized.");
-        throw new InvalidUserException();
-      }
+
       prefs = ((JsonObject) message.body()).getJsonObject(MessageConstants.MSG_KEY_PREFS);
       request = ((JsonObject) message.body()).getJsonObject(MessageConstants.MSG_HTTP_BODY);
       switch (msgOp) {
@@ -72,123 +70,244 @@ class MessageProcessor implements Processor {
           break;
         default:
           LOGGER.error("Invalid operation type passed in, not able to handle");
-          throw new InvalidRequestException();
+          return MessageResponseFactory.createInvalidRequestResponse(RESOURCE_BUNDLE.getString("invalid.item.lookup"));
       }
-      return new ResponseTransformerBuilder().build(result).transform();
-    } catch (InvalidRequestException e) {
-      LOGGER.warn("Caught Invalid Request exception while processing", e);
-      return new ResponseTransformerBuilder().build(e).transform();
-    } catch (InvalidUserException e) {
-      LOGGER.warn("Caught Invalid User while processing", e);
-      return new ResponseTransformerBuilder().build(e).transform();
-    } catch (Throwable throwable) {
-      LOGGER.warn("Caught unexpected exception here", throwable);
-      return new ResponseTransformerBuilder().build(throwable).transform();
+      return result;
+    } catch (Throwable e) {
+      LOGGER.error("Unhandled exception in processing", e);
+      return MessageResponseFactory.createInternalErrorResponse();
     }
   }
 
-  private JsonObject processReadingLevels() {
+  private MessageResponse processReadingLevels() {
+    MessageResponse response;
     JsonObject result = ProcessorCache.getInstance().getReadingLevels();
     if (result == null) {
-      result = new RepoBuilder().buildMetadataRepo().getReadingLevels();
-      // Update the cache item
-      ProcessorCache.getInstance().setReadingLevels(result);
+      response = RepoBuilder.buildMetadataRepo().getReadingLevels();
+      if (response.isSuccessful()) {
+        JsonObject itemToCache = response.getSuccessResult();
+        if (itemToCache != null && !itemToCache.isEmpty()) {
+          // Update the cache item
+          ProcessorCache.getInstance().setReadingLevels(itemToCache);
+        }
+      }
+    } else {
+      response = MessageResponseFactory.createOkayResponse(result);
     }
-    return result;
+    return response;
   }
 
-  private JsonObject processMediaFeatures() {
+  private MessageResponse processMediaFeatures() {
+    MessageResponse response;
     JsonObject result = ProcessorCache.getInstance().getMediaFeatures();
     if (result == null) {
-      result = new RepoBuilder().buildMetadataRepo().getMediaFeatures();
-      // Update the cache item
-      ProcessorCache.getInstance().setMediaFeatures(result);
+      response = RepoBuilder.buildMetadataRepo().getMediaFeatures();
+      if (response.isSuccessful()) {
+        JsonObject itemToCache = response.getSuccessResult();
+        if (itemToCache != null && !itemToCache.isEmpty()) {
+          // Update the cache item
+          ProcessorCache.getInstance().setMediaFeatures(itemToCache);
+        }
+      }
+    } else {
+      response = MessageResponseFactory.createOkayResponse(result);
     }
-    return result;
+    return response;
   }
 
-  private JsonObject processGrades() {
+  private MessageResponse processGrades() {
+    MessageResponse response;
     JsonObject result = ProcessorCache.getInstance().getGrades();
     if (result == null) {
-      result = new RepoBuilder().buildMetadataRepo().getGrades();
-      // Update the cache item
-      ProcessorCache.getInstance().setGrades(result);
+      response = RepoBuilder.buildMetadataRepo().getGrades();
+      if (response.isSuccessful()) {
+        JsonObject itemToCache = response.getSuccessResult();
+        if (itemToCache != null && !itemToCache.isEmpty()) {
+          // Update the cache item
+          ProcessorCache.getInstance().setGrades(itemToCache);
+        }
+      }
+    } else {
+      response = MessageResponseFactory.createOkayResponse(result);
     }
-    return result;
+    return response;
   }
 
-  private JsonObject processEducationalUse() {
+  private MessageResponse processEducationalUse() {
+    MessageResponse response;
     JsonObject result = ProcessorCache.getInstance().getEducationalUse();
     if (result == null) {
-      result = new RepoBuilder().buildMetadataRepo().getEducationalUse();
-      // Update the cache item
-      ProcessorCache.getInstance().setEducationalUse(result);
+      response = RepoBuilder.buildMetadataRepo().getEducationalUse();
+      if (response.isSuccessful()) {
+        JsonObject itemToCache = response.getSuccessResult();
+        if (itemToCache != null && !itemToCache.isEmpty()) {
+          // Update the cache item
+          ProcessorCache.getInstance().setEducationalUse(itemToCache);
+        }
+      }
+    } else {
+      response = MessageResponseFactory.createOkayResponse(result);
     }
-    return result;
+    return response;
   }
 
-  private JsonObject processAdStatus() {
+  private MessageResponse processAdStatus() {
+    MessageResponse response;
     JsonObject result = ProcessorCache.getInstance().getAdStatus();
     if (result == null) {
-      result = new RepoBuilder().buildMetadataRepo().getAdStatus();
-      // Update the cache item
-      ProcessorCache.getInstance().setAdStatus(result);
+      response = RepoBuilder.buildMetadataRepo().getAdStatus();
+      if (response.isSuccessful()) {
+        JsonObject itemToCache = response.getSuccessResult();
+        if (itemToCache != null && !itemToCache.isEmpty()) {
+          // Update the cache item
+          ProcessorCache.getInstance().setAdStatus(itemToCache);
+        }
+      }
+    } else {
+      response = MessageResponseFactory.createOkayResponse(result);
     }
-    return result;
+    return response;
   }
 
-  private JsonObject process21CenSkills() {
+  private MessageResponse process21CenSkills() {
+    MessageResponse response;
     JsonObject result = ProcessorCache.getInstance().getCenSkills();
     if (result == null) {
-      result = new RepoBuilder().buildCen21SkillsRepo().getCen21Skills();
-      // Update the cache item
-      ProcessorCache.getInstance().setCenSkills(result);
+      response = RepoBuilder.buildCen21SkillsRepo().getCen21Skills();
+      if (response.isSuccessful()) {
+        JsonObject itemToCache = response.getSuccessResult();
+        if (itemToCache != null && !itemToCache.isEmpty()) {
+          // Update the cache item
+          ProcessorCache.getInstance().setCenSkills(itemToCache);
+        }
+      }
+    } else {
+      response = MessageResponseFactory.createOkayResponse(result);
     }
-    return result;
+    return response;
   }
 
 
-  private JsonObject processAccessHazards() {
+  private MessageResponse processAccessHazards() {
+    MessageResponse response;
     JsonObject result = ProcessorCache.getInstance().getAccessHazards();
     if (result == null) {
-      result = new RepoBuilder().buildMetadataRepo().getAccessHazards();
-      // Update the cache item
-      ProcessorCache.getInstance().setAccessHazards(result);
+      response = RepoBuilder.buildMetadataRepo().getAccessHazards();
+      if (response.isSuccessful()) {
+        JsonObject itemToCache = response.getSuccessResult();
+        if (itemToCache != null && !itemToCache.isEmpty()) {
+          // Update the cache item
+          ProcessorCache.getInstance().setAccessHazards(itemToCache);
+        }
+      }
+    } else {
+      response = MessageResponseFactory.createOkayResponse(result);
     }
-    return result;
+    return response;
   }
 
-  private JsonObject processMomentsOfLearning() {
+  private MessageResponse processMomentsOfLearning() {
+    MessageResponse response;
     JsonObject result = ProcessorCache.getInstance().getMomentsOfLearning();
     if (result == null) {
-      result = new RepoBuilder().buildMetadataRepo().getMomentsOfLearning();
-      // Update the cache item
-      ProcessorCache.getInstance().setMomentsOfLearning(result);
+      response = RepoBuilder.buildMetadataRepo().getMomentsOfLearning();
+      if (response.isSuccessful()) {
+        JsonObject itemToCache = response.getSuccessResult();
+        if (itemToCache != null && !itemToCache.isEmpty()) {
+          // Update the cache item
+          ProcessorCache.getInstance().setMomentsOfLearning(itemToCache);
+        }
+      }
+    } else {
+      response = MessageResponseFactory.createOkayResponse(result);
     }
-    return result;
-
+    return response;
   }
 
-  private JsonObject processDepthOfKnowledge() {
+  private MessageResponse processDepthOfKnowledge() {
+    MessageResponse response;
     JsonObject result = ProcessorCache.getInstance().getDepthOfKnowledge();
     if (result == null) {
-      result = new RepoBuilder().buildMetadataRepo().getDepthOfKnowledge();
-      // Update the cache item
-      ProcessorCache.getInstance().setDepthOfKnowledge(result);
+      response = RepoBuilder.buildMetadataRepo().getDepthOfKnowledge();
+      if (response.isSuccessful()) {
+        JsonObject itemToCache = response.getSuccessResult();
+        if (itemToCache != null && !itemToCache.isEmpty()) {
+          // Update the cache item
+          ProcessorCache.getInstance().setDepthOfKnowledge(itemToCache);
+        }
+      }
+    } else {
+      response = MessageResponseFactory.createOkayResponse(result);
     }
-    return result;
-
+    return response;
   }
 
-  private JsonObject processAudience() {
+  private MessageResponse processAudience() {
+    MessageResponse response;
     JsonObject result = ProcessorCache.getInstance().getAudience();
     if (result == null) {
-      result = new RepoBuilder().buildMetadataRepo().getAudience();
-      // Update the cache item
-      ProcessorCache.getInstance().setAudience(result);
+      response = RepoBuilder.buildMetadataRepo().getAudience();
+      if (response.isSuccessful()) {
+        JsonObject itemToCache = response.getSuccessResult();
+        if (itemToCache != null && !itemToCache.isEmpty()) {
+          // Update the cache item
+          ProcessorCache.getInstance().setAudience(itemToCache);
+        }
+      }
+    } else {
+      response = MessageResponseFactory.createOkayResponse(result);
     }
-    return result;
-
+    return response;
   }
+
+  private ExecutionResult<MessageResponse> validateAndInitialize() {
+    if (message == null || !(message.body() instanceof JsonObject)) {
+      LOGGER.error("Invalid message received, either null or body of message is not JsonObject ");
+      return new ExecutionResult<>(MessageResponseFactory.createInvalidRequestResponse(RESOURCE_BUNDLE.getString("invalid.message")),
+        ExecutionResult.ExecutionStatus.FAILED);
+    }
+
+    String userId = ((JsonObject) message.body()).getString(MessageConstants.MSG_USER_ID);
+    if (!validateUser(userId)) {
+      LOGGER.error("Invalid user id passed. Not authorized.");
+      return new ExecutionResult<>(MessageResponseFactory.createForbiddenResponse(RESOURCE_BUNDLE.getString("missing.user")),
+        ExecutionResult.ExecutionStatus.FAILED);
+    }
+
+    prefs = ((JsonObject) message.body()).getJsonObject(MessageConstants.MSG_KEY_PREFS);
+    request = ((JsonObject) message.body()).getJsonObject(MessageConstants.MSG_HTTP_BODY);
+
+    if (prefs == null || prefs.isEmpty()) {
+      LOGGER.error("Invalid preferences obtained, probably not authorized properly");
+      return new ExecutionResult<>(MessageResponseFactory.createForbiddenResponse(RESOURCE_BUNDLE.getString("missing.preferences")),
+        ExecutionResult.ExecutionStatus.FAILED);
+    }
+
+    if (request == null) {
+      LOGGER.error("Invalid JSON payload on Message Bus");
+      return new ExecutionResult<>(MessageResponseFactory.createInvalidRequestResponse(RESOURCE_BUNDLE.getString("invalid.payload")),
+        ExecutionResult.ExecutionStatus.FAILED);
+    }
+
+    // All is well, continue processing
+    return new ExecutionResult<>(null, ExecutionResult.ExecutionStatus.CONTINUE_PROCESSING);
+  }
+
+
+  private boolean validateUser(String userId) {
+    return !(userId == null || userId.isEmpty()) && (userId.equalsIgnoreCase(MessageConstants.MSG_USER_ANONYMOUS) || validateUuid(userId));
+  }
+
+  private boolean validateUuid(String uuidString) {
+    try {
+      UUID uuid = UUID.fromString(uuidString);
+      return true;
+    } catch (IllegalArgumentException e) {
+      return false;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
 
 }
