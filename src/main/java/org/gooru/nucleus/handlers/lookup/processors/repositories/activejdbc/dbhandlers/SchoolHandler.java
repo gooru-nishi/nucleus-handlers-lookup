@@ -2,7 +2,6 @@ package org.gooru.nucleus.handlers.lookup.processors.repositories.activejdbc.dbh
 
 import java.util.UUID;
 
-import org.gooru.nucleus.handlers.lookup.constants.MessageConstants;
 import org.gooru.nucleus.handlers.lookup.processors.repositories.activejdbc.entities.AJEntitySchool;
 import org.gooru.nucleus.handlers.lookup.processors.responses.ExecutionResult;
 import org.gooru.nucleus.handlers.lookup.processors.responses.MessageResponse;
@@ -50,45 +49,8 @@ class SchoolHandler implements DBHandler {
     } else {
       return new ExecutionResult<>(MessageResponseFactory.createInvalidRequestResponse(), ExecutionResult.ExecutionStatus.FAILED);
     }
-    
-    /* if (!query.isEmpty() && (query != null)){
-      String[] keywordMap = query.split("&");
-      LOGGER.debug("length: {} ", keywordMap.length);
-      if ( keywordMap.length == 1)
-      {
-        String[] keywordValue = keywordMap[0].split("=");
-        if (keywordValue.length > 0) {
-          if ( keywordValue[0].equalsIgnoreCase(MessageConstants.ID_KEYWORD)) {
-            schooldistrict_keyword = "%" + keywordValue[1] + "%";
-            LOGGER.debug("only one param" , schooldistrict_keyword);
-           
-          }
-          return new ExecutionResult<>(MessageResponseFactory.createInvalidRequestResponse(), ExecutionResult.ExecutionStatus.FAILED);
-        }
-        return new ExecutionResult<>(MessageResponseFactory.createInvalidRequestResponse(), ExecutionResult.ExecutionStatus.FAILED);
-      } else if ( keywordMap.length > 1){
-        for ( int i = 0; i < keywordMap.length; i++) {
-          LOGGER.debug(": {}", keywordMap[i]);
-          String[] keywordValue = keywordMap[i].split("=");
-          if(keywordValue[0].equalsIgnoreCase(MessageConstants.ID_KEYWORD)) {
-            schooldistrict_keyword = "%" + keywordValue[1] + "%";
-            LOGGER.debug("two params 1. {} {}" , keywordValue[0], schooldistrict_keyword);
-          } else if (keywordValue[0].equalsIgnoreCase(MessageConstants.ID_SCHOOLDISTRICT)) {
-            school_district_id = UUID.fromString(keywordValue[1]);
-            LOGGER.debug("two params 2. {} {}" , keywordValue[0], school_district_id);
-          }
-          else
-            return new ExecutionResult<>(MessageResponseFactory.createInvalidRequestResponse(), ExecutionResult.ExecutionStatus.FAILED);
-        }
-        
-       
-      }
-      return new ExecutionResult<>(MessageResponseFactory.createInvalidRequestResponse(), ExecutionResult.ExecutionStatus.FAILED);
-    }
-    return new ExecutionResult<>(MessageResponseFactory.createInvalidRequestResponse(), ExecutionResult.ExecutionStatus.FAILED);*/
   }
-
-
+  
   @Override
   public boolean handlerReadOnly() {
     return true;
